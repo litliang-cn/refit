@@ -537,7 +537,7 @@ namespace Refit
                             switch (restMethod.BodyParameterInfo.Item1)
                             {
                                 case BodySerializationMethod.UrlEncoded:
-                                    content = await serializer.SerializeAsFormDataAsync(param, settings).ConfigureAwait(false);
+                                    ret.Content = await serializer.SerializeAsFormDataAsync(param, settings).ConfigureAwait(false);
                                     break;
                                 case BodySerializationMethod.Default:
 #pragma warning disable CS0618 // Type or member is obsolete
