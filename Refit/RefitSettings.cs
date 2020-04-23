@@ -76,7 +76,7 @@ namespace Refit
     public interface IContentSerializer
     {
         Task<HttpContent> SerializeAsync<T>(T item);
-
+        Task<HttpContent> SerializeAsFormDataAsync<T>(T item, RefitSettings settings);
         Task<T> DeserializeAsync<T>(HttpContent content);
     }
 

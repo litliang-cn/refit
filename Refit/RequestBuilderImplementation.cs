@@ -533,17 +533,18 @@ namespace Refit
                         }
                         else
                         {
+                            HttpContent content;
                             switch (restMethod.BodyParameterInfo.Item1)
                             {
                                 case BodySerializationMethod.UrlEncoded:
-                                    ret.Content = param is string str ? (HttpContent)new StringContent(Uri.EscapeDataString(str), Encoding.UTF8, "application/x-www-form-urlencoded") : new FormUrlEncodedContent(new FormValueMultimap(param, settings));
+                                    content = await serializer.SerializeAsFormDataAsync(param, settings).ConfigureAwait(false);
                                     break;
                                 case BodySerializationMethod.Default:
 #pragma warning disable CS0618 // Type or member is obsolete
                                 case BodySerializationMethod.Json:
 #pragma warning restore CS0618 // Type or member is obsolete
                                 case BodySerializationMethod.Serialized:
-                                    var content = await serializer.SerializeAsync(param).ConfigureAwait(false);
+                                    content = await serializer.SerializeAsync(param).ConfigureAwait(false);
                                     switch (restMethod.BodyParameterInfo.Item2)
                                     {
                                         case false:
@@ -562,9 +563,9 @@ namespace Refit
                                             ret.Content = content;
                                             break;
                                     }
-
                                     break;
                             }
+
                         }
 
                         continue;

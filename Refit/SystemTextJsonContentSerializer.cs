@@ -14,7 +14,7 @@ namespace Refit
     /// <summary>
     /// A <see langword="class"/> implementing <see cref="IContentSerializer"/> using the System.Text.Json APIs
     /// </summary>
-    public sealed class SystemTextJsonContentSerializer : IContentSerializer
+    public sealed class SystemTextJsonContentSerializer : ContentSerializer
     {
         /// <summary>
         /// The JSON serialization options to use
@@ -36,7 +36,7 @@ namespace Refit
         }
 
         /// <inheritdoc/>
-        public Task<HttpContent> SerializeAsync<T>(T item)
+        public override Task<HttpContent> SerializeAsync<T>(T item)
         {
             using var utf8BufferWriter = new PooledBufferWriter();
 
@@ -59,7 +59,7 @@ namespace Refit
         }
 
         /// <inheritdoc/>
-        public async Task<T> DeserializeAsync<T>(HttpContent content)
+        public override async Task<T> DeserializeAsync<T>(HttpContent content)
         {
             using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
 

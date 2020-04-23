@@ -10,7 +10,7 @@ namespace Refit
     /// <summary>
     /// A <see langword="class"/> implementing <see cref="IContentSerializer"/> using the Newtonsoft.Json APIs
     /// </summary>
-    public sealed class NewtonsoftJsonContentSerializer : IContentSerializer
+    public sealed class NewtonsoftJsonContentSerializer : ContentSerializer
     {
         /// <summary>
         /// The <see cref="Lazy{T}"/> instance providing the JSON serialization settings to use
@@ -34,7 +34,7 @@ namespace Refit
         }
 
         /// <inheritdoc/>
-        public Task<HttpContent> SerializeAsync<T>(T item)
+        public override Task<HttpContent> SerializeAsync<T>(T item)
         {
             var content = new StringContent(JsonConvert.SerializeObject(item, jsonSerializerSettings.Value), Encoding.UTF8, "application/json");
 
@@ -42,7 +42,7 @@ namespace Refit
         }
 
         /// <inheritdoc/>
-        public async Task<T> DeserializeAsync<T>(HttpContent content)
+        public override async Task<T> DeserializeAsync<T>(HttpContent content)
         {
             var serializer = JsonSerializer.Create(jsonSerializerSettings.Value);
 

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Refit
 {
     [Obsolete("Use NewtonsoftJsonContentSerializer instead", false)]
-    public class JsonContentSerializer : IContentSerializer
+    public class JsonContentSerializer : ContentSerializer
     {
         readonly Lazy<JsonSerializerSettings> jsonSerializerSettings;
 
@@ -30,13 +30,13 @@ namespace Refit
             });
         }
 
-        public Task<HttpContent> SerializeAsync<T>(T item)
+        public override Task<HttpContent> SerializeAsync<T>(T item)
         {
             var content = new StringContent(JsonConvert.SerializeObject(item, jsonSerializerSettings.Value), Encoding.UTF8, "application/json");
             return Task.FromResult((HttpContent)content);
         }
 
-        public async Task<T> DeserializeAsync<T>(HttpContent content)
+        public override async Task<T> DeserializeAsync<T>(HttpContent content)
         {
             var serializer = JsonSerializer.Create(jsonSerializerSettings.Value);
 

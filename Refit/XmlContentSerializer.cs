@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace Refit
 {
 
-    public class XmlContentSerializer : IContentSerializer
+    public class XmlContentSerializer : ContentSerializer
     {
         readonly XmlContentSerializerSettings settings;
         readonly ConcurrentDictionary<Type, XmlSerializer> serializerCache = new ConcurrentDictionary<Type, XmlSerializer>();
@@ -24,7 +24,7 @@ namespace Refit
             this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
-        public Task<HttpContent> SerializeAsync<T>(T item)
+        public override Task<HttpContent> SerializeAsync<T>(T item)
         {
             var xmlSerializer = serializerCache.GetOrAdd(item.GetType(), t => new XmlSerializer(t, settings.XmlAttributeOverrides));
 
@@ -37,7 +37,7 @@ namespace Refit
             return Task.FromResult((HttpContent)content);
         }
 
-        public async Task<T> DeserializeAsync<T>(HttpContent content)
+        public override async Task<T> DeserializeAsync<T>(HttpContent content)
         {
             var xmlSerializer = serializerCache.GetOrAdd(typeof(T), t => new XmlSerializer(t, settings.XmlAttributeOverrides));
 
